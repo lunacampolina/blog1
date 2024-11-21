@@ -52,20 +52,13 @@ class Usuarios extends Controller
                     $dados['senha'] = password_hash($formulario['senha'], PASSWORD_DEFAULT);
 
                     if($this->usuarioModel->armazenar($dados)):
-                    echo 'Cadastro realizado com sucesso<hr>';
+                        Sessao::mensagem('usuario', 'Usuário cadastrado com sucesso');
                     else:
-                        die("Erro ao armazenar o usuário no banco de dados");
+                        Sessao::mensagem('usuario', 'Erro ao cadastrar o usuário', ' alert alert-danger');
+    
                     endif;
                 endif;
             endif;
-            /*
-            echo 'Senha Original: '.$formulario['senha']."<hr>";
-            echo 'Senha MD5: '.md5($formulario['senha'])."<hr>";
-            echo '<hr>';
-            $senha_segura = password_hash($formulario['senha'], PASSWORD_DEFAULT);
-            echo 'Senha hash: '.$senha_segura.'<hr>';
-            */
-            var_dump($formulario);
         else :
             $dados = [
                 'nome' => '',
@@ -133,6 +126,7 @@ class Usuarios extends Controller
         $_SESSION['usuario_id'] = $usuario->id;
         $_SESSION['usuario_nome'] = $usuario->nome;
         $_SESSION['usuario_email'] = $usuario->email;
+        Url::resirecionar('paginas/home');
     }// fim da função criarSessaoUsuario
 
     public function sair(){
@@ -141,6 +135,6 @@ class Usuarios extends Controller
         unset($_SESSION['usuario_email']);
 
         session_destroy();
-        header('Location:'.URL.'');
+        Url:: redirecionar('usuario/logar');
     }//fim da função sair
 }//fim da classe Usuarios
